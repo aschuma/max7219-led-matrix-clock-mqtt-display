@@ -1,0 +1,6 @@
+mqtt_server = {
+    'username': 'username',
+    'password': 'secret',
+    'ip_address': '192.168.0.43',
+    'port': 1883,
+}
