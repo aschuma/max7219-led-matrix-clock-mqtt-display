@@ -1,0 +1,15 @@
+[Unit]
+Description=Max7219 led-matrix mqtt display service
+After=network.target
+
+[Service]
+ExecStart=/home/pi/Projects/max7219-led-matrix-clock-mqtt-display/venv/bin/python -u __init__.py
+WorkingDirectory=/home/pi/Projects/max7219-led-matrix-clock-mqtt-display
+StandardOutput=inherit
+StandardError=inherit
+Restart=always
+User=pi
+
+[Install]
+WantedBy=multi-user.target
+
