@@ -90,8 +90,8 @@ def vertical_scroll(device, words):
     for i in range(virtual.height - 12):
         virtual.set_position((0, i))
         if i > 0 and i % 12 == 0:
-            time.sleep(1.8)
-        time.sleep(0.05)
+            time.sleep(1.7)
+        time.sleep(0.04)
 
 
 def main():
@@ -117,11 +117,11 @@ def main():
             if sec == 59:
                 # When we change minutes, animate the minute change
                 minute_change(device)
-            elif sec == 20:
+            elif sec == 20 or sec == 40:
                 today = date.today()
                 messages = [today.strftime("%2d.%2m.%4Y")] + msg_provider.messages()
                 vertical_scroll(device, messages)
-            elif sec == 40:
+            elif sec == 40 and False:
                 today = date.today()
                 messages = [today.strftime("%2d.%2m.%4Y")] + msg_provider.messages()
                 animation(device, 1, 8)
