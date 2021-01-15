@@ -4,6 +4,7 @@
 import time
 from datetime import date
 from datetime import datetime
+from datetime import timedelta
 
 from luma.core.interface.serial import spi, noop
 from luma.core.legacy import text, show_message
@@ -21,9 +22,16 @@ MSG_FONT = proportional(LCD_FONT)
 
 class HoursMinutes:
     def __init__(self):
-        ts = datetime.now()
-        self.hours = ts.strftime('%H')
-        self.minutes = ts.strftime('%M')
+        self.ts = datetime.now()
+        self._set_hm()
+
+    def next(self):
+        self.ts = self.ts + timedelta(seconds=1)
+        self._set_hm()
+    
+    def _set_hm(self):
+        self.hours = self.ts.strftime('%H')
+        self.minutes = self.ts.strftime('%M')
 
 
 def now():
@@ -49,6 +57,7 @@ def minute_change(device):
     
     for current_y in range(1, 9):
         helper(current_y)
+    ts.next()
     for current_y in range(9, 1, -1):
         helper(current_y)
 
