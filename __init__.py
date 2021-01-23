@@ -18,7 +18,7 @@ from messageprovider import MessageProvider
 
 CLOCK_FONT = CP437_FONT
 MSG_FONT = proportional(LCD_FONT)
-
+LONG_MSG_LEN = 10
 
 class HoursMinutes:
     def __init__(self):
@@ -100,7 +100,7 @@ def vertical_scroll(device, words):
         virtual.set_position((0, i))
         if i > 0 and i % 12 == 0:
             time.sleep(1.7)
-        time.sleep(0.04)
+        time.sleep(0.025)
 
 
 def main():
@@ -126,17 +126,22 @@ def main():
             if sec == 59:
                 # When we change minutes, animate the minute change
                 minute_change(device)
-            elif sec == 20 or sec == 40:
+            elif sec == 20:
                 today = date.today()
-                messages = [today.strftime("%2d.%2m.%4Y")] + msg_provider.messages()
+                messages = [today.strftime("%2d.%2m.%4Y")] + [m for m in msg_provider.messages() if len(m) <= LONG_MSG_LEN]
                 vertical_scroll(device, messages)
-            elif sec == 40 and False:
+            elif sec == 40:
                 today = date.today()
-                messages = [today.strftime("%2d.%2m.%4Y")] + msg_provider.messages()
-                animation(device, 1, 8)
-                for full_msg in messages:
-                    show_message(device, full_msg, fill="white", font=proportional(MSG_FONT))
-                animation(device, 8, 1)
+                long_messages = [ m for m in msg_provider.messages() if len(m) > LONG_MSG_LEN ]
+                if len(long_messages) > 0:
+                    messages = long_messages
+                    animation(device, 1, 8)
+                    for full_msg in messages:
+                       show_message(device, full_msg, fill="white", font=proportional(MSG_FONT))
+                    animation(device, 8, 1)
+                else:
+                    messages = [today.strftime("%2d.%2m.%4Y")] + [m for m in msg_provider.messages() if len(m) <= LONG_MSG_LEN]
+                    vertical_scroll(device, messages)
             else:
                 ts = now()
                 with canvas(device) as draw:
