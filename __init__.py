@@ -18,7 +18,7 @@ from messageprovider import MessageProvider
 
 CLOCK_FONT = CP437_FONT
 MSG_FONT = proportional(LCD_FONT)
-LONG_MSG_LEN = 10
+LONG_MSG_LEN = 11
 
 class HoursMinutes:
     def __init__(self):
