@@ -41,6 +41,8 @@ def now():
 def day_of_week():
     return ["MO", "DI", "MI", "DO", "FR", "SA", "SO"][datetime.today().weekday()]
 
+def cp437_encode(str):
+   return [c.encode('cp437') for c in str]
 
 def minute_change(device):
     """When we reach a minute change, animate it."""
@@ -137,7 +139,7 @@ def main():
                     messages = long_messages
                     animation(device, 1, 8)
                     for full_msg in messages:
-                       show_message(device, full_msg, fill="white", font=proportional(MSG_FONT))
+                       show_message(device, cp437_encode(full_msg), fill="white", font=proportional(CLOCK_FONT))
                     animation(device, 8, 1)
                 else:
                     messages = [today.strftime("%2d.%2m.%4Y")] + [m for m in msg_provider.messages() if len(m) <= LONG_MSG_LEN]
