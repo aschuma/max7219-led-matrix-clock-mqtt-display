@@ -128,7 +128,7 @@ def main():
             if sec == 59:
                 # When we change minutes, animate the minute change
                 minute_change(device)
-            elif sec == 20:
+            elif sec == 10:
                 today = date.today()
                 messages = [today.strftime("%2d.%2m.%4Y")] + [m for m in msg_provider.messages() if len(m) <= LONG_MSG_LEN]
                 vertical_scroll(device, messages)
