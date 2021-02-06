@@ -44,4 +44,4 @@ class MessageProvider:
     
     @staticmethod
     def _format(json_obj):
-        return "" + str(json_obj["name"]) + " " + str(json_obj["value"]) + "" + str(json_obj["unit"])
+        return ("" + str(json_obj["name"]) + " " + str(json_obj["value"]) + "" + str(json_obj["unit"])).strip()
