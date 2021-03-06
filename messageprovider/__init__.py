@@ -41,6 +41,12 @@ class MessageProvider:
             [pair[1] for pair in self.ttl_cache.items()],
             key=lambda json_object: json_object["weight"])
         return [self._format(json_obj) for json_obj in sorted_sensor_json_obj_list]
+
+    def long_messages(self,limit):  
+        return [m for m in self.messages() if len(m) > limit]
+
+    def short_messages(self,limit):      
+        return [m for m in self.messages() if len(m) <= limit]     
     
     @staticmethod
     def _format(json_obj):
