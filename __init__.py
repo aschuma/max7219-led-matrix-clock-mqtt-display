@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import time
+import re
 from datetime import date
 from datetime import datetime
 from datetime import timedelta
@@ -29,7 +30,7 @@ class Timestamp:
         self._set_hm()
 
     def _set_hm(self):
-        self.hours = self.ts.strftime("%H")
+        self.hours = re.sub(r"^(0)(.)$", r" \2", self.ts.strftime("%H"))
         self.minutes = self.ts.strftime("%M")
         self.date = self.ts.strftime("%d.%m.%Y")
         self.day_of_week = ["MO", "DI", "MI", "DO", "FR", "SA", "SO"][
