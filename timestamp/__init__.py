@@ -3,13 +3,12 @@ from datetime import datetime
 from datetime import timedelta
 
 class Timestamp:
-    def __init__(self):
-        self.ts = datetime.now()
+    def __init__(self, ts):
+        self.ts = ts
         self._set_hm()
 
     def next(self):
-        self.ts = self.ts + timedelta(seconds=1)
-        self._set_hm()
+        return Timestamp(ts = self.ts + timedelta(seconds=1))
 
     def _set_hm(self):
         self.hours = re.sub(r"^(0)(.)$", r" \2", self.ts.strftime("%H"))
@@ -21,5 +20,5 @@ class Timestamp:
 
 
 def now():
-    return Timestamp()
+    return Timestamp(datetime.now())
 
