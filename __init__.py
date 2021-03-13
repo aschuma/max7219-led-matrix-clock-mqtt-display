@@ -2,9 +2,6 @@
 # -*- coding: utf-8 -*-
 
 import time
-from datetime import date
-from datetime import datetime
-from datetime import timedelta
 
 from luma.core.interface.serial import spi, noop
 from luma.core.legacy import text, show_message
@@ -15,30 +12,9 @@ from luma.led_matrix.device import max7219
 
 import config
 from messageprovider import MessageProvider
+from timestamp import Timestamp, now
 
 LONG_MSG_LEN = 11
-
-
-class Timestamp:
-    def __init__(self):
-        self.ts = datetime.now()
-        self._set_hm()
-
-    def next(self):
-        self.ts = self.ts + timedelta(seconds=1)
-        self._set_hm()
-
-    def _set_hm(self):
-        self.hours = self.ts.strftime("%H")
-        self.minutes = self.ts.strftime("%M")
-        self.date = self.ts.strftime("%d.%m.%Y")
-        self.day_of_week = ["MO", "DI", "MI", "DO", "FR", "SA", "SO"][
-            self.ts.today().weekday()
-        ]
-
-
-def now():
-    return Timestamp()
 
 
 def draw_time(draw, ts, x_offset=0, y_offset=0, minute_y_offset=0, toggle=True):
