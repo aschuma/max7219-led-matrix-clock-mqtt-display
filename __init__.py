@@ -39,7 +39,7 @@ class Clock:
             ClockDigit(position=(17,1),transition_delay=4),
             ClockDigit(position=(25,1),transition_delay=0)]
 
-    def max_tick(self): return 16
+    def max_tick(self): return 20
 
     def transition(self, painter, ts0, ts1, tick ):
         self.digits[0].transition(
