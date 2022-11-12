@@ -153,7 +153,7 @@ def horizontal_scroll(device, messages):
             cp437_encode(msg),
             fill="white",
             font=proportional(CP437_FONT),
-            scroll_delay=0.024,
+            scroll_delay=0.022,
         )
     animation(device, 8, 1)
 
