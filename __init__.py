@@ -2,9 +2,6 @@
 # -*- coding: utf-8 -*-
 
 import time
-from datetime import date
-from datetime import datetime
-from datetime import timedelta
 
 from luma.core.interface.serial import spi, noop
 from luma.core.legacy import text, show_message
@@ -15,30 +12,56 @@ from luma.led_matrix.device import max7219
 
 import config
 from messageprovider import MessageProvider
+from timestamp import Timestamp, now
 
 LONG_MSG_LEN = 11
 
+class ClockDigit:
 
-class Timestamp:
+    def __init__(self, position, transition_delay =0, height=10):
+        self.position = position
+        self.transitions_delay = transition_delay
+        self.height = height
+
+    def transition(self, painter, digit, digit_next, offset = 0):
+        if digit == digit_next:
+            painter(self.position, digit)
+        else:    
+            delayed_offset = min(self.height, max(0, offset - self.transitions_delay)) 
+            painter((self.position[0], self.position[1] - delayed_offset), digit)
+            painter((self.position[0], self.position[1] - delayed_offset + self.height), digit_next)
+
+class Clock:
     def __init__(self):
-        self.ts = datetime.now()
-        self._set_hm()
+        self.digits = [ 
+            ClockDigit(position=(0,1),transition_delay=12),
+            ClockDigit(position=(8,1),transition_delay=8),
+            ClockDigit(position=(17,1),transition_delay=4),
+            ClockDigit(position=(25,1),transition_delay=0)]
 
-    def next(self):
-        self.ts = self.ts + timedelta(seconds=1)
-        self._set_hm()
+    def max_tick(self): return 20
 
-    def _set_hm(self):
-        self.hours = self.ts.strftime("%H")
-        self.minutes = self.ts.strftime("%M")
-        self.date = self.ts.strftime("%d.%m.%Y")
-        self.day_of_week = ["MO", "DI", "MI", "DO", "FR", "SA", "SO"][
-            self.ts.today().weekday()
-        ]
-
-
-def now():
-    return Timestamp()
+    def transition(self, painter, ts0, ts1, tick ):
+        self.digits[0].transition(
+            painter=painter,
+            digit=ts0.hours[0], 
+            digit_next=ts1.hours[0], 
+            offset=tick)
+        self.digits[1].transition(
+            painter=painter,
+            digit=ts0.hours[1], 
+            digit_next=ts1.hours[1], 
+            offset=tick)
+        self.digits[2].transition(
+            painter=painter,
+            digit=ts0.minutes[0], 
+            digit_next=ts1.minutes[0], 
+            offset=tick)
+        self.digits[3].transition(
+            painter=painter,
+            digit=ts0.minutes[1], 
+            digit_next=ts1.minutes[1], 
+            offset=tick)
 
 
 def draw_time(draw, ts, x_offset=0, y_offset=0, minute_y_offset=0, toggle=True):
@@ -62,9 +85,29 @@ def minute_change(device):
 
     for current_y in range(0, 9):
         helper(current_y)
-    timestamp.next()
+    timestamp = timestamp.next()
     for current_y in range(9, 0, -1):
         helper(current_y)
+
+
+def minute_change_v2(device):
+    """When we reach a minute change, animate it."""
+    ts = now()
+    ts_next = ts.next()
+    
+    clock = Clock()
+    for tick in range(clock.max_tick()):
+        with canvas(device) as draw:
+
+            text(draw, (48,1), ts.day_of_week, fill="white", font=proportional(CP437_FONT))    
+
+            def painter(position,digit):
+                text(draw, position, digit, fill="white", font=CP437_FONT)  
+
+            clock.transition(painter,ts, ts_next,tick)
+            time.sleep(0.025)
+
+
 
 
 def animation(device, from_y, to_y):
@@ -110,7 +153,7 @@ def horizontal_scroll(device, messages):
             cp437_encode(msg),
             fill="white",
             font=proportional(CP437_FONT),
-            scroll_delay=0.024,
+            scroll_delay=0.022,
         )
     animation(device, 8, 1)
 
@@ -143,7 +186,7 @@ def main():
             sec = timestamp.ts.second
             if sec == 59:
                 # When we change minutes, animate the minute change
-                minute_change(device)
+                minute_change_v2(device)
             elif sec == 10:
                 messages = [timestamp.date] + msg_provider.short_messages(LONG_MSG_LEN)
                 vertical_scroll(device, messages)
