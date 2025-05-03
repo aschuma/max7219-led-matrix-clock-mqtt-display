@@ -66,7 +66,7 @@ This project uses the [luma.led_matrix](https://github.com/rm-hull/luma.led_matr
 
 ### 💡 Important Note
 
-As mentioned in the [luma.led_matrix documentation](https://luma-led-matrix.readthedocs.io/en/latest/notes.html), it's recommended to use a logic level converter to bridge the 3.3V (Raspberry Pi) and 5V (MAX7219) gap. We recommend using a bidirectional logic level converter such as [this one](https://www.amazon.com/Level-Conversion-Module-Sensor-Raspberry/dp/B07QC929R4/).
+As mentioned in the [luma.led_matrix documentation](https://luma-led-matrix.readthedocs.io/en/latest/notes.html), it's recommended to use a logic level converter to bridge the 3.3V (Raspberry Pi) and 5V (MAX7219) gap. I recommend using a bidirectional logic level converter such as [this one](https://www.amazon.com/Level-Conversion-Module-Sensor-Raspberry/dp/B07QC929R4/).
 
 ## 📡 MQTT Integration
 
