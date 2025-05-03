@@ -12,7 +12,7 @@ from luma.led_matrix.device import max7219
 
 import config
 from messageprovider import MessageProvider
-from timestamp import Timestamp, now
+from timestamp import Timestamp
 
 LONG_MSG_LEN = 11
 
@@ -74,25 +74,10 @@ def draw_time(draw, ts, x_offset=0, y_offset=0, minute_y_offset=0, toggle=True):
     txt(48, 0, ts.day_of_week, font=proportional(CP437_FONT))
 
 
-def minute_change(device):
-    """When we reach a minute change, animate it."""
-    timestamp = now()
-
-    def helper(current_y):
-        with canvas(device) as draw:
-            draw_time(draw=draw, ts=timestamp, minute_y_offset=current_y, toggle=False)
-        time.sleep(0.08)
-
-    for current_y in range(0, 9):
-        helper(current_y)
-    timestamp = timestamp.next()
-    for current_y in range(9, 0, -1):
-        helper(current_y)
-
 
 def minute_change_v2(device):
     """When we reach a minute change, animate it."""
-    ts = now()
+    ts = Timestamp.now()
     ts_next = ts.next()
     
     clock = Clock()
@@ -112,7 +97,7 @@ def minute_change_v2(device):
 
 def animation(device, from_y, to_y):
     """Animate the whole thing, moving it into/out of the abyss."""
-    timestamp = now()
+    timestamp = Timestamp.now()
     current_y = from_y
     while current_y != to_y:
         with canvas(device) as draw:
@@ -122,7 +107,7 @@ def animation(device, from_y, to_y):
 
 
 def vertical_scroll(device, words):
-    timestamp = now()
+    timestamp = Timestamp.now()
     messages = [" "] + words + [" "]
     virtual = viewport(device, width=device.width, height=len(messages) * 12)
 
@@ -182,7 +167,7 @@ def main():
     while True:
         try:
             toggle = not toggle
-            timestamp = now()
+            timestamp = Timestamp.now()
             sec = timestamp.ts.second
             if sec == 59:
                 # When we change minutes, animate the minute change

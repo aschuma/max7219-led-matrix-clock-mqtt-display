@@ -18,7 +18,7 @@ class Timestamp:
             self.ts.today().weekday()
         ]
 
-
-def now():
-    return Timestamp(datetime.now())
+    @staticmethod
+    def now():
+        return Timestamp(datetime.now())
 
