@@ -65,17 +65,21 @@ class Clock:
 
 
 def draw_time(draw, ts, x_offset=0, y_offset=0, minute_y_offset=0, toggle=True):
-    def txt(x,y, value, font=CP437_FONT):
-        text(draw, (x + x_offset, 1 + y + y_offset), value, fill="white", font=font)    
+    def txt(x,y, value, font=CP437_FONT, fill="white"):
+        text(draw, (x + x_offset, 1 + y + y_offset), value, fill=fill, font=font)
 
     txt(0, 0, ts.hours)
     txt(15, 0,":" if toggle else " ", font=proportional(TINY_FONT))
     txt(17, minute_y_offset, ts.minutes)
-    txt(48, 0, ts.day_of_week, font=proportional(CP437_FONT))
-
-
-
-def minute_change_v2(device):
+    draw_time_day(draw=draw, ts=ts, x_offset=x_offset, y_offset=y_offset)
+  
+  
+def draw_time_day(draw, ts, x_offset=0, y_offset=0):    
+    draw.rectangle((47 + x_offset, 0 + y_offset, 63 + x_offset, 7 + y_offset), outline="white", fill="white")
+    text(draw, (47 + 1 + x_offset, 1 + y_offset), ts.day_of_week, fill="black", font=proportional(CP437_FONT))
+    
+    
+def minute_change(device):
     """When we reach a minute change, animate it."""
     ts = Timestamp.now()
     ts_next = ts.next()
@@ -84,7 +88,7 @@ def minute_change_v2(device):
     for tick in range(clock.max_tick()):
         with canvas(device) as draw:
 
-            text(draw, (48,1), ts.day_of_week, fill="white", font=proportional(CP437_FONT))    
+            draw_time_day(draw=draw, ts=ts)   
 
             def painter(position,digit):
                 text(draw, position, digit, fill="white", font=CP437_FONT)  
@@ -171,7 +175,7 @@ def main():
             sec = timestamp.ts.second
             if sec == 59:
                 # When we change minutes, animate the minute change
-                minute_change_v2(device)
+                minute_change(device)
             elif sec == 10:
                 messages = [timestamp.date] + msg_provider.short_messages(LONG_MSG_LEN)
                 vertical_scroll(device, messages)
@@ -193,3 +197,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
