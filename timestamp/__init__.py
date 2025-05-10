@@ -14,8 +14,9 @@ class Timestamp:
         self.hours = re.sub(r"^(0)(.)$", r" \2", self.ts.strftime("%H"))
         self.minutes = self.ts.strftime("%M")
         self.date = self.ts.strftime("%d.%m.%Y")
+        self.weekday = self.ts.today().weekday()
         self.day_of_week = ["MO", "DI", "MI", "DO", "FR", "SA", "SO"][
-            self.ts.today().weekday()
+            self.weekday
         ]
 
     @staticmethod

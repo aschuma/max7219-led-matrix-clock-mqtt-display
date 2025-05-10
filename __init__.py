@@ -74,9 +74,11 @@ def draw_time(draw, ts, x_offset=0, y_offset=0, minute_y_offset=0, toggle=True):
     draw_time_day(draw=draw, ts=ts, x_offset=x_offset, y_offset=y_offset)
   
   
-def draw_time_day(draw, ts, x_offset=0, y_offset=0):    
-    draw.rectangle((47 + x_offset, 0 + y_offset, 63 + x_offset, 7 + y_offset), outline="white", fill="white")
-    text(draw, (47 + 1 + x_offset, 1 + y_offset), ts.day_of_week, fill="black", font=proportional(CP437_FONT))
+def draw_time_day(draw, ts, x_offset=0, y_offset=0):
+    is_weekday = ts.weekday < 5  # True if Monday-Friday, False for Saturday-Sunday
+    color1, color2 = ("black", "white") if is_weekday else ("white", "black")
+    draw.rectangle((48 + x_offset, 0 + y_offset, 63 + x_offset, 7 + y_offset), outline=color1, fill=color1)
+    text(draw, (48 + 1 + x_offset, 1 + y_offset), ts.day_of_week, fill=color2, font=proportional(CP437_FONT))
     
     
 def minute_change(device):
