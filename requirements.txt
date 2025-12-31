@@ -1,4 +1,4 @@
-cbor2==5.4.6
+cbor2==5.8.0
 luma.core==2.4.2
 luma.led-matrix==1.7.1
 paho-mqtt==2.1.0
